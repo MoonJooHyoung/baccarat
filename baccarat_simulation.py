@@ -45,6 +45,18 @@ plt.rcParams['axes.unicode_minus'] = False  # 마이너스(-) 깨짐 방지
 def can_bet(balance, bet):
     return balance >= bet
 
+def safe_minmax(lst1, lst2):
+    nums = [x for x in lst1 + lst2 if isinstance(x, (int, float)) and not (isinstance(x, float) and np.isnan(x))]
+    if nums:
+        y_min = min(nums) - 50
+        y_max = max(nums) + 50
+        if y_min == y_max:
+            y_min -= 1
+            y_max += 1
+        return y_min, y_max
+    else:
+        return 0, 1
+
 for rnd in range(rounds):
     # 둘 다 자본이 0 이하이면 게임 중단
     if a_total < initial_bet and b_total < initial_bet:
@@ -95,8 +107,8 @@ for rnd in range(rounds):
     a_total = max(a_total, 0)
     b_total = max(b_total, 0)
 
-    a_balance_history.append(a_total)
-    b_balance_history.append(b_total)
+    a_balance_history.append(float(a_total))
+    b_balance_history.append(float(b_total))
     results.append((a_total, b_total))
     win_streak_a.append(current_win_a)
     lose_streak_a.append(current_lose_a)
@@ -126,8 +138,9 @@ png_filename = f'gif/baccarat_{next_number}.png'
 
 fig, ax = plt.subplots(figsize=(12, 6))
 ax.set_xlim(0, rounds)
-ax.set_ylim(min(min(a_balance_history), min(b_balance_history)) - 50,
-            max(max(a_balance_history), max(b_balance_history)) + 50)
+# y축 범위 안전하게 지정
+y_min, y_max = safe_minmax(a_balance_history, b_balance_history)
+ax.set_ylim(y_min, y_max)
 # 선 객체 생성 (마커 없이)
 line_a, = ax.plot([], [], 'b-', label='A 자본', linewidth=2)
 line_b, = ax.plot([], [], 'r-', label='B 자본', linewidth=2)
@@ -192,6 +205,8 @@ print(f"총 베팅 횟수: {rounds}회")
 
 # 자본 그래프도 저장
 plt.figure(figsize=(12, 6))
+y_min, y_max = safe_minmax(a_balance_history, b_balance_history)
+plt.ylim(y_min, y_max)
 plt.plot(range(rounds + 1), a_balance_history, 'b-', label='A 자본', linewidth=2)
 plt.plot(range(rounds + 1), b_balance_history, 'r-', label='B 자본', linewidth=2)
 plt.axhline(0, color='gray', linestyle='--', linewidth=0.8)
