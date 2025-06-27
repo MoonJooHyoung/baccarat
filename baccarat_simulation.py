@@ -70,9 +70,12 @@ for rnd in range(rounds):
 
     if a_can_bet and b_can_bet:
         if win:
-            a_total -= a_bet if a_total >= a_bet else a_total  # 실제 베팅 금액만큼 차감
-            a_total += a_bet * 2  # 이긴 금액만큼 더함
-            b_total -= b_bet
+            # A가 이긴 경우: 실제 베팅 가능한 금액만큼만 베팅
+            actual_a_bet = min(a_total, a_bet)
+            actual_b_bet = min(b_total, b_bet)
+            a_total -= actual_a_bet
+            a_total += actual_a_bet * 2
+            b_total -= actual_b_bet
             a_bet = min(a_total, a_total)  # 이긴 사람은 딴 만큼 다시 걸기(자본 한도)
             b_bet = initial_bet
             a_direction = "Banker"
@@ -80,9 +83,12 @@ for rnd in range(rounds):
             current_win_a += 1
             current_lose_a = 0
         else:
-            b_total -= b_bet if b_total >= b_bet else b_total
-            b_total += b_bet * 2
-            a_total -= a_bet
+            # B가 이긴 경우: 실제 베팅 가능한 금액만큼만 베팅
+            actual_a_bet = min(a_total, a_bet)
+            actual_b_bet = min(b_total, b_bet)
+            b_total -= actual_b_bet
+            b_total += actual_b_bet * 2
+            a_total -= actual_a_bet
             b_bet = min(b_total, b_total)
             a_bet = initial_bet
             a_direction = "Player"
@@ -91,14 +97,16 @@ for rnd in range(rounds):
             current_win_a = 0
     elif a_can_bet:
         # B는 파산, A만 베팅
-        a_total -= a_bet if a_total >= a_bet else a_total
-        a_total += a_bet * 2
+        actual_a_bet = min(a_total, a_bet)
+        a_total -= actual_a_bet
+        a_total += actual_a_bet * 2
         a_bet = min(a_total, a_total)
         b_bet = initial_bet
     elif b_can_bet:
         # A는 파산, B만 베팅
-        b_total -= b_bet if b_total >= b_bet else b_total
-        b_total += b_bet * 2
+        actual_b_bet = min(b_total, b_bet)
+        b_total -= actual_b_bet
+        b_total += actual_b_bet * 2
         b_bet = min(b_total, b_total)
         a_bet = initial_bet
     # 둘 다 못하면 아무것도 안 함
