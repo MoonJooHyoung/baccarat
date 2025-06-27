@@ -74,9 +74,9 @@ for rnd in range(rounds):
             actual_a_bet = min(a_total, a_bet)
             actual_b_bet = min(b_total, b_bet)
             a_total -= actual_a_bet
-            a_total += actual_a_bet * 2
+            a_total += actual_a_bet * 2  # 베팅 금액의 2배를 받음 (원금 + 상금)
             b_total -= actual_b_bet
-            # 이긴 사람은 딴 만큼 다시 걸기(단, 자본 한도 내에서)
+            # 이긴 사람은 딴 만큼 다시 걸기 (이번에 딴 금액 = actual_a_bet)
             a_bet = min(a_total, actual_a_bet)
             b_bet = initial_bet
             a_direction = "Banker"
@@ -88,9 +88,9 @@ for rnd in range(rounds):
             actual_a_bet = min(a_total, a_bet)
             actual_b_bet = min(b_total, b_bet)
             b_total -= actual_b_bet
-            b_total += actual_b_bet * 2
+            b_total += actual_b_bet * 2  # 베팅 금액의 2배를 받음 (원금 + 상금)
             a_total -= actual_a_bet
-            # 이긴 사람은 딴 만큼 다시 걸기(단, 자본 한도 내에서)
+            # 이긴 사람은 딴 만큼 다시 걸기 (이번에 딴 금액 = actual_b_bet)
             b_bet = min(b_total, actual_b_bet)
             a_bet = initial_bet
             a_direction = "Player"
