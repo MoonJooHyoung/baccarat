@@ -133,9 +133,11 @@ plt.grid(True, alpha=0.3)
 plt.tight_layout()
 
 # 주요 구간마다 금액 라벨 표시 (20회차마다)
-for i in range(0, n_rounds, 20):
-    plt.text(i, players['A']['history'][i], f"{players['A']['history'][i]:,.0f}", color='blue', fontsize=8, ha='center', va='bottom', fontweight='bold')
-    plt.text(i, players['B']['history'][i], f"{players['B']['history'][i]:,.0f}", color='red', fontsize=8, ha='center', va='top', fontweight='bold')
+for i in range(0, min(n_rounds, len(players['A']['history'])), 20):
+    if i < len(players['A']['history']):
+        plt.text(i, players['A']['history'][i], f"{players['A']['history'][i]:,.0f}", color='blue', fontsize=8, ha='center', va='bottom', fontweight='bold')
+    if i < len(players['B']['history']):
+        plt.text(i, players['B']['history'][i], f"{players['B']['history'][i]:,.0f}", color='red', fontsize=8, ha='center', va='top', fontweight='bold')
 
 # 애니메이션 함수
 def animate(i):
